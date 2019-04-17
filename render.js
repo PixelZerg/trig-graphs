@@ -10,22 +10,23 @@ var colours = [
 var col_back = "#444";
 var col_fore = "#eee";
 
-// // pinky
-// var colours = [
-//     "#E5989B",
-//     "#FFB4A2",
-//     "#FFCDB2",
-// ];
-// var col_back = "#6D6875";
-// var col_fore = "#FFCDB2";
+// pinky
+var colours = [
+    "#E5989B",
+    "#FFB4A2",
+    "#FFCDB2",
+];
+var col_back = "#6D6875";
+var col_fore = "#FFCDB2";
 
-// var colours = [
-//     "#EF959D",
-//     "#FCDDBC",
-//     "#D9DBBC",
-// ];
-// var col_back = "#6D6875";
-// var col_fore = "#D9DBBC";
+// deep red
+var colours = [
+    "#723D46",
+    "#E26D5C",
+    "#C9CBA3",
+];
+var col_back = "#472D30";
+var col_fore = "#FFE1A8";
 
 xvals = [
     0,
@@ -64,6 +65,26 @@ labels = [
     "5pi/3",
     "7pi/4",
     "11pi/6",
+    "",
+];
+
+labels_deg = [
+    "",
+    "30deg",
+    "45deg",
+    "60deg",
+    "90deg",
+    "120deg",
+    "135deg",
+    "150deg",
+    "",
+    "210deg",
+    "225deg",
+    "240deg",
+    "270deg",
+    "300deg",
+    "315deg",
+    "330deg",
     "",
 ];
 
@@ -125,6 +146,13 @@ function gety(y){
     return c.height-(ay+y*sy);
 }
 
+function yToY(xval, y1, y2){
+    cx.beginPath();
+    cx.moveTo(getx(xval), gety(y1));
+    cx.lineTo(getx(xval), gety(y2));
+    cx.stroke();
+}
+
 function axisToCurve(xval){
     cx.beginPath();
     cx.moveTo(getx(xval), gety(0));
@@ -167,15 +195,54 @@ window.onload = function(){
     cx.lineTo(c.width,gety(0));
     cx.stroke();
 
-    labels
-    cx.font = 8.355427582103333*s+'px "Arial"';
-    cx.fillStyle = col_fore;
+    // labels
+    cx.font = 'bold '+8.355427582103333*s+'px "Arial"';
+    // cx.fillStyle = col_fore;
+    // for(var i = 0; i<xvals.length; i++){
+    //     // cx.fillStyle = xcolours[i];
+    //     if(xvals[i]<Math.PI){
+    //         cx.fillText(labels[i].replace('pi','π'), getx(xvals[i]-0.07),gety(-0.13));
+    //     }else{
+    //         cx.fillText(labels[i].replace('pi','π'), getx(xvals[i]-0.09),gety(0.13)+w);
+    //     }
+
+    //     if(xvals[i]<Math.PI){
+    //         cx.fillText(labels_deg[i].replace('deg','°'), getx(xvals[i]-0.07),gety(-0.24));
+    //     }else{
+    //         cx.fillText(labels_deg[i].replace('deg','°'), getx(xvals[i]-0.09),gety(0.24)+w);
+    //     }
+    // }
+
     for(var i = 0; i<xvals.length; i++){
-        // cx.fillStyle = xcolours[i];
+        cx.fillStyle = xcolours[i];
+
         if(xvals[i]<Math.PI){
-            cx.fillText(labels[i].replace('pi','π'), getx(xvals[i]-0.07),gety(-0.13));
+            cx.fillText(labels[i].replace('pi','π'), getx(xvals[i]-0.07),gety(-1.2)+w);
         }else{
-            cx.fillText(labels[i].replace('pi','π'), getx(xvals[i]-0.09),gety(0.13)+w);
+            cx.fillText(labels[i].replace('pi','π'), getx(xvals[i]-0.09),gety(-1.2)+w);
+        }
+        
+        if(xvals[i]<Math.PI){
+            cx.fillText(labels_deg[i].replace('deg','°'), getx(xvals[i]-0.055),gety(1.2));
+        }else{
+            cx.fillText(labels_deg[i].replace('deg','°'), getx(xvals[i]-0.07),gety(1.2));
+        }
+    }
+
+    // labels to axis lines
+    cx.lineWidth = s;
+    cx.setLineDash([1*s, 12*s]);
+    // cx.setLineDash([10*s, 12*s]);
+
+    for(var i = 1; i<xvals.length-1; i++){
+        if(labels[i] == ""){ continue; }
+
+        cx.strokeStyle = xcolours[i];
+
+        if (xvals[i]<Math.PI){
+            yToY(xvals[i], -1.05, 0);
+        }else{
+            yToY(xvals[i], 1.05, 0);
         }
     }
 
