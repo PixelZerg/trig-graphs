@@ -7,4 +7,4 @@ Code which generates some nice looking trig graphs
 ![](out/tan-red.png)
 ![](out/cosine.png)
 
-[https://github.com/PixelZerg/trig-graphs/tree/master/out](More can be found here).
+[More can be found here](/out).
