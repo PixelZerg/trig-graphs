@@ -1,6 +1,8 @@
 var c = document.getElementById('c');
 var cx = c.getContext('2d');
 
+var p = 0;
+
 // standard colour scheme
 var colours = [
     "#FFE066",
@@ -48,46 +50,6 @@ xvals = [
     2*Math.PI,
 ];
 
-labels = [
-    "",
-    "pi/6",
-    "pi/4",
-    "pi/3",
-    "pi/2",
-    "2pi/3",
-    "3pi/4",
-    "5pi/6",
-    "",
-    "7pi/6",
-    "5pi/4",
-    "4pi/3",
-    "3pi/2",
-    "5pi/3",
-    "7pi/4",
-    "11pi/6",
-    "",
-];
-
-labels_deg = [
-    "",
-    "30deg",
-    "45deg",
-    "60deg",
-    "90deg",
-    "120deg",
-    "135deg",
-    "150deg",
-    "",
-    "210deg",
-    "225deg",
-    "240deg",
-    "270deg",
-    "300deg",
-    "315deg",
-    "330deg",
-    "",
-];
-
 xcolours = [
     colours[0],
     colours[0],
@@ -105,7 +67,6 @@ xcolours = [
     colours[2],
     colours[1],
     colours[0],
-    colours[0] //? about this one
 ];
 
 xcoloursa = [
@@ -126,7 +87,6 @@ xcoloursa = [
     colours[2],
     colours[1],
     colours[0],
-    colours[0] //? about this one
 ];
 
 var ay = c.height/2; // axis y
@@ -135,7 +95,7 @@ var sy = c.height/4; // scale y
 var s = 0.01* Math.sqrt(sx*sy); // width unit
 
 function curve(x){
-    return Math.sin(x);
+    return Math.sin(x+p);
 }
 
 function getx(x){
@@ -161,7 +121,7 @@ function axisToCurve(xval){
 }
 
 
-window.onload = function(){
+function render(){
     // drawing
     var w = 4*s;
 
@@ -182,7 +142,7 @@ window.onload = function(){
         // interpolation between xvals[i-1] and xvals[i]
         cx.beginPath();
         cx.strokeStyle = xcoloursa[i];
-        for(var t = xvals[i-1]; t<xvals[i]; t+=0.0001){
+        for(var t = xvals[i-1]; t<xvals[i]; t+=0.001){
             cx.lineTo(getx(t),gety(curve(t)));
         }
         cx.stroke();
@@ -194,58 +154,10 @@ window.onload = function(){
     cx.moveTo(getx(0),gety(0));
     cx.lineTo(c.width,gety(0));
     cx.stroke();
+}
+window.onload = render;
 
-    // labels
-    cx.font = 'bold '+8.355427582103333*s+'px "Arial"';
-    // cx.fillStyle = col_fore;
-    // for(var i = 0; i<xvals.length; i++){
-    //     // cx.fillStyle = xcolours[i];
-    //     if(xvals[i]<Math.PI){
-    //         cx.fillText(labels[i].replace('pi','π'), getx(xvals[i]-0.07),gety(-0.13));
-    //     }else{
-    //         cx.fillText(labels[i].replace('pi','π'), getx(xvals[i]-0.09),gety(0.13)+w);
-    //     }
-
-    //     if(xvals[i]<Math.PI){
-    //         cx.fillText(labels_deg[i].replace('deg','°'), getx(xvals[i]-0.07),gety(-0.24));
-    //     }else{
-    //         cx.fillText(labels_deg[i].replace('deg','°'), getx(xvals[i]-0.09),gety(0.24)+w);
-    //     }
-    // }
-
-    for(var i = 0; i<xvals.length; i++){
-        cx.fillStyle = xcolours[i];
-
-        if(xvals[i]<Math.PI){
-            cx.fillText(labels[i].replace('pi','π'), getx(xvals[i]-0.07),gety(-1.2)+w);
-        }else{
-            cx.fillText(labels[i].replace('pi','π'), getx(xvals[i]-0.09),gety(-1.2)+w);
-        }
-        
-        if(xvals[i]<Math.PI){
-            cx.fillText(labels_deg[i].replace('deg','°'), getx(xvals[i]-0.055),gety(1.2));
-        }else{
-            cx.fillText(labels_deg[i].replace('deg','°'), getx(xvals[i]-0.07),gety(1.2));
-        }
-    }
-
-    // labels to axis lines
-    cx.lineWidth = s;
-    cx.setLineDash([1*s, 12*s]);
-    // cx.setLineDash([10*s, 12*s]);
-
-    for(var i = 1; i<xvals.length-1; i++){
-        if(labels[i] == ""){ continue; }
-
-        cx.strokeStyle = xcolours[i];
-
-        if (xvals[i]<Math.PI){
-            yToY(xvals[i], -1.05, 0);
-        }else{
-            yToY(xvals[i], 1.05, 0);
-        }
-    }
-
-    // cx.fillStyle = "#555";
-    // cx.fillText("PixelZerg", c.width-100,c.height-30);
-};
+setInterval(function(){
+    render();
+    p+=0.01;
+},1);
